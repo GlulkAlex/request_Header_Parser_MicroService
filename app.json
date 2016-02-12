@@ -1,0 +1,14 @@
+{
+  "name": "API Basejump: Request Header Parser Microservice",
+  "description": "A Node.js microservice app using Express 4",
+  "repository": "https://github.com/GlulkAlex/request_Header_Parser_MicroService.git",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": [
+    "node", 
+    "express", 
+    "api", 
+    "microservice",
+    "parser"
+  ],
+  "image": "heroku/nodejs"
+}

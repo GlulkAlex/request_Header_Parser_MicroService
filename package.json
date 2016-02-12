@@ -1,0 +1,29 @@
+{
+  "name": "api-basejump-request-header-parser-microservice",
+  "version": "0.0.0",
+  "description": "A Node.js microservice app using Express 4",
+  "main": "express_Server.js",
+  "scripts": {
+    "start": "node express_Server.js"
+  },
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "engines": {
+    "node": "^4.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GlulkAlex/request_Header_Parser_MicroService.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express",
+    "api", 
+    "microservice",
+    "parser"
+  ],
+  "author": { "name" : "GlukAlex"},
+  "license": "MIT"
+}
