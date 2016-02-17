@@ -156,6 +156,9 @@ var http_Server = http.createServer(
           
           if (date_Time_Str) {
             
+            if (is_DEBUG) {
+              console.log(`date_Time_Str: ${date_Time_Str}`);
+            }
             response.writeHead(
               200, 
               { 'Content-Type': 'application/json' }
@@ -166,7 +169,8 @@ var http_Server = http.createServer(
                 {
                   "hour": iso_Date.getHours(),
                   "minute": iso_Date.getMinutes(),
-                  "second": iso_Date.getSeconds()
+                  "second": iso_Date.getSeconds(),
+                  'unixtime': Date.parse(date_Time_Str)
                 }
               )
             );
@@ -174,7 +178,11 @@ var http_Server = http.createServer(
           } else {
             
             const accepts_Languages = request.headers["accept-language"];
-            const accepted_Language = accepts_Languages.split(";")[0];
+            const accepted_Language = accepts_Languages
+            .split(
+              //";"
+              ","
+            )[0];
             if (is_DEBUG) {
               console.log(`accepts_Languages: ${accepts_Languages}`);
             }
@@ -278,7 +286,7 @@ http_Server
 .listen(
   port_Number,
   //hostname: '127.0.0.1'
-  '127.0.0.1',
+  process.env.HOSTNAME || process.env.HOST || '127.0.0.1',
   () => {
     var address = http_Server.address();
     var port = http_Server.address().port;
