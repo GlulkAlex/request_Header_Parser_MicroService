@@ -12,10 +12,10 @@ deploy it to Heroku.
   operating system 
   for client browser.  
   
-Example usage:
+Example usage (live demo):
 ---
-  * [https://cryptic-ridge-9197.herokuapp.com/api/whoami/](https://cryptic-ridge-9197.herokuapp.com/api/whoami/)
+  * [http://request-header-parser-api.herokuapp.com/api/whoami](http://request-header-parser-api.herokuapp.com/api/whoami)
 
 Example output:
 ---
-    {"ipaddress":"###.###.###.###","language":"ww-WW","software":"X11; Linux x86_64"}
+    {"ipaddress":"127.0.0.1","language":"en-US","software":"X11; Linux x86_64"}
