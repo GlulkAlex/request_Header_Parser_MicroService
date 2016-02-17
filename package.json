@@ -9,7 +9,7 @@
   "dependencies": {
   },
   "engines": {
-    "node": "^4.2.3",
+    "node": "^4.2.3"
   },
   "repository": {
     "type": "git",
