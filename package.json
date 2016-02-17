@@ -2,15 +2,15 @@
   "name": "api-basejump-request-header-parser-microservice",
   "version": "0.0.0",
   "description": "A Node.js microservice app using Express 4",
-  "main": "express_Server.js",
+  "main": "http_Server.js",
   "scripts": {
-    "start": "node express_Server.js"
+    "start": "node http_Server.js"
   },
   "dependencies": {
-    "express": "^4.13.4"
   },
   "engines": {
-    "node": "^4.2.3"
+    "node": "^4.2.3",
+    "npm": "^1.4.21"
   },
   "repository": {
     "type": "git",

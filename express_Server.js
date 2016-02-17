@@ -18,7 +18,7 @@ const end_Point_Search = '/search';
 const end_Point_Api_WhoAmI = "/api/whoami";
 const port = (
     process.argv[2] || 
-    process.env.PORT || 
+    process.env.PORT || //0
     8080 ||
     3000
 );
@@ -340,13 +340,64 @@ will assign a random port.
 //console.log('process.env: %j', process.env);
 //req.hostname: "localhost"
 //Host:s3.amazonaws.com
-app
+/*
+server.listen(path[, callback])#
+Start a UNIX socket server 
+listening for connections on the given path
+*/
+var server = app
 .listen(
   port,
   // works for "localhost" //
-  process.env.HOST || process.env.HOSTNAME || "localhost",
+  process.env.HOST || process.env.HOSTNAME, //|| "localhost"
+  // Error: listen EACCES http://localhost:8080/
+  //"http://localhost:8080/", //+ "api/whoami",
+  //Error: 
+  // listen EADDRINUSE 
+  /*
+  One issue some users run into is 
+  getting EADDRINUSE errors. 
+  This means that 
+  another server is 
+  already running on the requested port. 
+  One way of handling this would be 
+  to wait a second and then 
+  try again.
+  */
+  //path.join(process.cwd()),
   function () {
   	console
-  	.log('http_Server listening on port ' + port + '...');
+  	.log('express_Server listening on port ' + port + '...');
+  }
+);
+
+server.on(
+  'error', 
+  (e) => {
+    
+    if (e.code == 'EADDRINUSE') {
+      console.log('Address in use, retrying...');
+      
+      setTimeout(
+        () => {
+          server.close();
+          server
+          .listen(
+            //PORT, 
+            //HOST
+            //path.join(process.cwd()),
+            function () {
+              
+              var port = server.address().port;
+              
+              console.log("App now running on port:", port);
+            	console
+            	.log('express_Server listening on port ' + port + '...');
+            }
+          );
+        }, 
+        1000
+      );
+    }
   }
 );
