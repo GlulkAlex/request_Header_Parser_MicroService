@@ -389,6 +389,20 @@ http_Server
 http_Server
 .listen(
   port_Number,
+  /*
+  In the Internet Protocol Version 4, the address 0.0.0.0 is a non-routable meta-address
+  In the context of routing, 0.0.0.0 usually means the default route, i.e. the route which leads to "the rest of" the internet instead of somewhere on the local network.
+  Uses include:
+    A way to 
+    specify "any IPv4 address at all". 
+    It is used in this way 
+    when configuring servers 
+    (i.e. when binding listening sockets). 
+    This is known to TCP programmers as INADDR_ANY. 
+    (bind(2) binds to addresses, not interfaces.)
+    In IPv6, the all-zeros address is typically represented by "::".
+  */
+  '0.0.0.0',
   //hostname: '127.0.0.1'
   //process.env.HOSTNAME || process.env.HOST || '127.0.0.1',
   () => {
