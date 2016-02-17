@@ -63,7 +63,7 @@ You can include this module with require('net');.
 //AppleWebKit/537.36 (KHTML, like Gecko) 
 //Ubuntu Chromium/48.0.2564.82 Chrome/48.0.2564.82 Safari/537.36
 
-if (false) {}
+if (false) {
 app
 // does not work
 .connect(
@@ -80,6 +80,7 @@ app
     //socket.end('goodbye\n');
   }
 );
+}
 
 if (false) {}
 app
@@ -338,6 +339,7 @@ will assign a random port.
 */
 //console.log('process.env: %j', process.env);
 //req.hostname: "localhost"
+//Host:s3.amazonaws.com
 app
 .listen(
   port,
