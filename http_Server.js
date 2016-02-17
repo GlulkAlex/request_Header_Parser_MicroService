@@ -207,6 +207,12 @@ var http_Server = http.createServer(
               console.log(`accepts_Languages: ${accepts_Languages}`);
             }
             var client_IP = (
+              (request.headers['x-forwarded-for'] || '').split(',')[0] ||
+              request.headers['x-forwarded-for'] || 
+              //X-Forwarded-For: 
+              // the originating IP address 
+              // of the client connecting to the Heroku router
+              request.headers['X-Forwarded-For'] || 
               request.client.remoteAddress ||
               request.socket.remoteAddress ||
               request.connection.remoteAddress
@@ -250,8 +256,9 @@ var http_Server = http.createServer(
             );
           }
         } else if (
-          url_Obj.pathname == "/" &&
-          url_Obj.pathname == url_Obj.path
+          url_Obj.path == "/"
+          //url_Obj.pathname == "/" &&
+          //url_Obj.pathname == url_Obj.path
           //url_Obj.pathname === ""
         ) {
           if (is_DEBUG) {
@@ -317,7 +324,8 @@ var http_Server = http.createServer(
           work as expected for
           http://localhost:8080/api/whoami
           */
-          if (false) {
+          //if (false) {
+          if (true) {  
           response
           .writeHead(
             //3xx: Redirection
@@ -383,6 +391,47 @@ http_Server
 */
 /*##########################################################################*/
 /* unit test */
+
+/*
+Routing
+A request’s unobfuscated path 
+from the end-client 
+through the Heroku infrastructure 
+to your application 
+allows 
+for full support of 
+HTTP 1.1 features 
+such as 
+chunked responses, 
+long polling, 
+websockets, and 
+using an async webserver 
+to handle multiple responses 
+from a single web process. 
+HTTP 1.0 compatibility is also maintained.
+
+Heroku headers
+All headers are 
+considered to 
+be case-insensitive, 
+as per HTTP Specification.
+X-Forwarded-For: 
+  the originating IP address 
+  of the client 
+  connecting to the Heroku router
+X-Forwarded-Proto: 
+  the originating protocol of the HTTP request (example: https)
+X-Forwarded-Port: 
+  the originating port of the HTTP request (example: 443)
+X-Request-Start: 
+  unix timestamp (milliseconds) 
+  when the request was received by the router
+X-Request-Id: 
+  the Heroku HTTP Request ID
+Via: 
+  a code name for the Heroku router
+*/
+
 //server.listen(path[, callback])
 // Start a UNIX socket server 
 // listening for connections on the given path.
@@ -402,7 +451,7 @@ http_Server
     (bind(2) binds to addresses, not interfaces.)
     In IPv6, the all-zeros address is typically represented by "::".
   */
-  '0.0.0.0',
+  //'0.0.0.0',
   //hostname: '127.0.0.1'
   //process.env.HOSTNAME || process.env.HOST || '127.0.0.1',
   () => {
