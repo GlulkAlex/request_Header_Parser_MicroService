@@ -63,6 +63,17 @@ You can include this module with require('net');.
 //AppleWebKit/537.36 (KHTML, like Gecko) 
 //Ubuntu Chromium/48.0.2564.82 Chrome/48.0.2564.82 Safari/537.36
 
+// Generic error handler used by all endpoints.
+function handleError(res, reason, message, code) {
+  console.log("ERROR: " + reason);
+  // 5xx: Server Error
+  // 500 Internal Server Error	
+  // A generic error message, 
+  // given when 
+  // no more specific message is suitable
+  res.status(code || 500).json({"error": message});
+}
+
 if (false) {
 app
 // does not work
@@ -347,9 +358,9 @@ listening for connections on the given path
 */
 var server = app
 .listen(
-  port,
+  port//,
   // works for "localhost" //
-  process.env.HOST || process.env.HOSTNAME, //|| "localhost"
+  //process.env.HOST || process.env.HOSTNAME, //|| "localhost"
   // Error: listen EACCES http://localhost:8080/
   //"http://localhost:8080/", //+ "api/whoami",
   //Error: 

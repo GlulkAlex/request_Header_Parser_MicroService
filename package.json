@@ -1,9 +1,10 @@
 {
   "name": "api-basejump-request-header-parser-microservice",
-  "version": "0.0.0",
+  "version": "0.0.12",
   "description": "A Node.js microservice app using Express 4",
   "main": "http_Server.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node http_Server.js"
   },
   "dependencies": {

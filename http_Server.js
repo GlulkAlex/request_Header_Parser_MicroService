@@ -1,5 +1,7 @@
 const is_DEBUG = (
-  true
+  process.env.IS_DEBUG ||
+  process.argv[2]
+  //true
   //false
 );
 const http = require('http');
@@ -8,7 +10,7 @@ const http = require('http');
 const url = require('url');
 
 const port_Number = (
-    process.argv[2] || 
+    //process.argv[2] || 
     process.env.PORT || //0
     8080 ||
     3000
@@ -83,8 +85,14 @@ function get_Software(
   }
   
   return software;
-}    
-    
+}  
+
+// Generic error handler used by all endpoints.
+function handleError(reason, message, code) {
+  console.log("ERROR: " + reason);
+  //res.status(code || 500).json({"error": message});
+}
+
 var http_Server = http.createServer(
   function (
     request,
@@ -138,6 +146,7 @@ var http_Server = http.createServer(
         if (is_DEBUG) {
           console.log(`message.url on 'end': ${request.url}`);
         }
+        //node -pe "require('url').parse('/test?q=1', true)" 
         url_Obj = url.parse(request.url, true);
         //console.log(`url_Obj.pathname: ${url_Obj.pathname}`);
         query_List = [];
@@ -146,11 +155,22 @@ var http_Server = http.createServer(
           query_List.push(url_Obj.query[item]);
         }
         //console.log(`url_Obj.query: ${query_List}`);
+        /*
+        pathname: 
+        The path section of the URL, 
+        that comes after the `host` and 
+        before the `query`, 
+        including the initial `slash` 
+        if present. 
+        No decoding is performed.
+        Example: '/p/a/t/h'
+        */
         if (url_Obj.pathname == end_Points_List[0]) {
           
           if (is_DEBUG) {
             console.log(`url_Obj.pathname: ${url_Obj.pathname}`);
             console.log(`end_Points_List[0]: ${end_Points_List[0]}`);
+            console.log(`url_Obj.path: ${url_Obj.path}`);
           }
           date_Time_Str = url_Obj.query['iso'];
           
@@ -213,6 +233,7 @@ var http_Server = http.createServer(
           if (is_DEBUG) {
             console.log(`url_Obj.pathname: ${url_Obj.pathname}`);
             console.log(`end_Points_List[1]: ${end_Points_List[1]}`);
+            console.log(`url_Obj.path: ${url_Obj.path}`);
           }
           date_Time_Str = url_Obj.query['iso'];
           
@@ -228,13 +249,75 @@ var http_Server = http.createServer(
               )
             );
           }
+        } else if (
+          url_Obj.pathname == "/" &&
+          url_Obj.pathname == url_Obj.path
+          //url_Obj.pathname === ""
+        ) {
+          if (is_DEBUG) {
+            console.log(`url_Obj.pathname: ${url_Obj.pathname}`);
+            console.log(`url_Obj.path: ${url_Obj.path}`);
+            console.log(`url_Obj.href: ${url_Obj.href}`);
+            console.log(
+              `Root`);
+          }
+          
+          var body = 'hello world';
+          
+          /*
+          If the body contains 
+          higher coded characters 
+          then Buffer.byteLength() should be used 
+          to determine 
+          the number of bytes 
+          in a given encoding. 
+          And Node.js does not check 
+          whether Content-Length and the 
+          length of the body 
+          which has been transmitted 
+          are equal or not.
+          */
+          //const buf = new Buffer('hello world', 'ascii');
+          //console.log(buf.toString('hex'));
+            // prints: 68656c6c6f20776f726c64
+          //console.log(buf.toString('base64'));
+            // prints: aGVsbG8gd29ybGQ=
+          //const buf4 = new Buffer('tést', 'utf8');
+            // creates a buffer containing UTF8 bytes [74, c3, a9, 73, 74]
+          //const str = '\u00bd + \u00bc = \u00be';
+          //console.log(`${str}: ${str.length} characters, ` +
+          //  `${Buffer.byteLength(str, 'utf8')} bytes`);
+            // ½ + ¼ = ¾: 9 characters, 12 bytes  
+          //const buf_utf8 = new Buffer(body, 'utf8');
+          
+          response.writeHead(200, {
+            'Content-Length': Buffer.byteLength(body, 'utf8'),//body.length,
+            'Content-Type': 'text/plain' });
+          //response.write(chunk[, encoding][, callback])
+          //TypeError: response.setEncoding is not a function
+          //response.setEncoding('utf8');
+          response.write(
+            body,
+            'utf8'
+          );
         } else {
           
           if (is_DEBUG) {
             console.log(`url_Obj.pathname: ${url_Obj.pathname}`);
+            console.log(`url_Obj.path: ${url_Obj.path}`);
+            console.log(`url_Obj.protocol: ${url_Obj.protocol}`);
             console.log(
               `Redirection to ${request.headers.host + end_Points_List[0]}`);
           }
+          // URL Parsing
+          // 'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'
+          // protocol: The request protocol, lowercased.
+          // Example: 'http:'
+          /*
+          work as expected for
+          http://localhost:8080/api/whoami
+          */
+          if (false) {
           response
           .writeHead(
             //3xx: Redirection
@@ -242,10 +325,31 @@ var http_Server = http.createServer(
             // The requested page has moved to a new URL 
             301, 
             {
-              Location: (request.socket.encrypted ? 'https://' : 'http://') +
-              request.headers.host + end_Points_List[0]
+              Location: (
+                (request.socket.encrypted ? 'https://' : 'http://') +
+                // url_Obj.protocol: null <- screw all
+                //url_Obj.protocol + '//' +
+                request.headers.host + end_Points_List[0]
+              )
             }
           );
+          } else {
+            var response_Body = "Try route `/api/whoami`";
+            //303 See Other	
+            // The requested page can be found under a different URL
+            response
+            .writeHead(
+              303, 
+              {
+                'Content-Length': Buffer.byteLength(response_Body, 'utf8'),
+                'Content-Type': 'text/plain'
+              }
+            );
+            response.write(
+              response_Body,
+              'utf8'
+            );
+          }
         }
         
         /* close `writable` `stream` */
@@ -286,7 +390,7 @@ http_Server
 .listen(
   port_Number,
   //hostname: '127.0.0.1'
-  process.env.HOSTNAME || process.env.HOST || '127.0.0.1',
+  //process.env.HOSTNAME || process.env.HOST || '127.0.0.1',
   () => {
     var address = http_Server.address();
     var port = http_Server.address().port;
