@@ -10,5 +10,6 @@
     "microservice",
     "parser"
   ],
-  "image": "heroku/nodejs"
+  "image": "heroku/nodejs",
+  "stack": "heroku-18"
 }
